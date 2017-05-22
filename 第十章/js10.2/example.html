@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>web design</title>
+    <style type="text/css">
+    #slideshow {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>web design</h1>
+    <p>these are the things you should know.</p>
+    <ol id="linklist">
+        <li><a href="structure.html">structure</a></li>
+        <li><a href="presentation.html">presentation</a></li>
+        <li><a href="behavior.html">behavior</a></li>
+    </ol>
+    <div id="slideshow">
+        <img src="topics.gif" alt="bulding blocks fo web design" id="preview">
+    </div>
+    <script type="text/javascript">
+    addLoadEvent(function() {
+        //确保浏览器支持dom方法
+        if (!document.getElementById) return false;
+        if (!document.getElementsByTagName) return false;
+        //确保元素存在
+        if (!document.getElementById('linklist')) return false;
+        if (!document.getElementsByTagName('a')) return false;
+        var linklist = document.getElementById('linklist');
+        var aArray = linklist.getElementsByTagName('a');
+        for (var i = 0; i < aArray.length; i++) {
+            aArray[i].onmouseover = function() {
+                moveElement(this);
+                return false;
+            }
+        }
+    });
+
+    function addLoadEvent(func) {
+        oldLoad = window.onload;
+        if (typeof window.onload == 'function') {
+            oldLoad();
+            func();
+        } else {
+            window.onload = func;
+        }
+    }
+
+    function moveElement(aArr) {
+        //确保浏览器支持dom方法
+        if (!document.getElementById) return false;
+        if (!document.getElementsByTagName) return false;
+        //确保元素存在
+        if (!document.getElementById('preview')) return false;
+        if (!document.getElementsByTagName('a')) return false;
+        var img = document.getElementById('preview');
+        img.style.position = 'absolute';
+
+        var aArray = linklist.getElementsByTagName('a');
+        for (var i = 0; i < aArray.length; i++) {
+            if (aArr.href == aArray[i].href) {
+                //img.style.left = -100 * (i + 1) + 'px';
+                moveElements('preview', -100 * (i + 1), 0, 10);
+            }
+        }
+    }
+    //带参数的移动函数
+    function moveElements(elementId, final_x, final_y, interval) {
+        if (!document.getElementById) return false;
+        if (!document.getElementById(elementId)) return false;
+        var mes = document.getElementById(elementId);
+    	//当动画还在进行中，先清除动画
+        if(mes.movement){ 	
+        	clearTimeout(mes.movement);
+        }
+        var xpos = parseInt(!mes.style.left?0:mes.style.left);
+        var ypos = parseInt(!mes.style.top?0:mes.style.top);
+        var dist = 0;
+        if (xpos == final_x && ypos == final_y) {
+            return true;
+        }
+        if (xpos < final_x) {
+            //xpos++;
+        	dist = Math.ceil((final_x-xpos)/10);
+        	xpos += dist;
+        }
+        if (xpos > final_x) {
+            xpos--;
+        }
+        if (ypos < final_y) {
+            ypos++;
+        }
+        if (ypos > final_y) {
+            ypos--;
+        }
+        mes.style.left = xpos + 'px';
+        mes.style.top = ypos + 'px';
+        //如何使用setTimeout来做重复的时间间隔功能，递归调用setTimeout
+        var repeat = "moveElements('" + elementId + "', " + final_x + ', ' + final_y + ', ' + interval + ")";
+        mes.movement = setTimeout(repeat, interval);
+    }
+    </script>
+</body>
+
+</html>
