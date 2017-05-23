@@ -92,3 +92,7 @@ article img{
 	z-index: 99;
 	border-style: none;
 }
+/* my css */
+#art section{
+	display: none;
+}

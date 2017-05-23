@@ -1,8 +1,9 @@
 addLoadEvent(highlightPage);
 addLoadEvent(prepareSlideshow);
+addLoadEvent(prepareInternalnav);
 
 function addLoadEvent(func) {
-    oldLoad = window.onload;
+    var oldLoad = window.onload;
     if (typeof window.onload != 'function') {
         window.onload = func;
     } else {
@@ -32,7 +33,7 @@ function addClass(element, value) {
         element.className = newClassName;
     }
 }
-
+// 被选中的链接高亮显示
 function highlightPage() {
     if (!document.getElementsByTagName) return false;
     if (!document.getElementsByTagName('nav')) return false;
@@ -48,7 +49,7 @@ function highlightPage() {
         }
     }
 }
-
+// 移动动画的代码
 function moveElement(elementId, final_x, final_y, interval) {
     if (!document.getElementById) return false;
     if (!document.getElementById(elementId)) return false
@@ -83,8 +84,10 @@ function moveElement(elementId, final_x, final_y, interval) {
     var repeat = "moveElement('" + elementId + "', " + final_x + ", " + final_y + ", " + interval + ")";
     ele.movement = setTimeout(repeat, interval);
 }
-
+// 首页，悬浮链接的时候，动态显示不同的图片
 function prepareSlideshow() {
+	if (!document.getElementById) return false;
+	if (!document.getElementById('intro')) return false
 
     var intro = document.getElementById('intro');
     var slideshow = document.createElement('div');
@@ -105,6 +108,38 @@ function prepareSlideshow() {
         links[i].thisI = i;
         links[i].onmouseover = function() {
             moveElement('preview', -150 * (this.thisI + 1), 0, 10);
+        }
+    }
+}
+// about页面，选中section显示，未选中隐藏
+function showSection(id) {
+	if (!document.getElementById) return false;
+	if (!document.getElementsByTagName) return false;
+    if (!document.getElementById('art')) return false;
+    if (!document.getElementsByTagName('section')) return false;
+    var intro = document.getElementById('art');
+    var sections = intro.getElementsByTagName('section');
+    for (var i = 0; i < sections.length; i++) {
+        if (sections[i].id == id) {
+            sections[i].style.display = 'block';
+        } else {
+            sections[i].style.display = 'none';
+        }
+    }
+}
+// about页面，点击链接显示section
+function prepareInternalnav() {
+	if (!document.getElementById) return false;
+	if (!document.getElementsByTagName) return false;
+    if (!document.getElementById('art')) return false;
+    if (!document.getElementsByTagName('section')) return false;
+    var intro = document.getElementById('art');
+    var links = intro.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {
+        links[i].onclick = function() {
+            // 获取链接#后的数据
+            var destion = this.href.split('#')[1];
+            showSection(destion);
         }
     }
 }
