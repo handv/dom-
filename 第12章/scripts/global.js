@@ -1,6 +1,8 @@
 addLoadEvent(highlightPage);
 addLoadEvent(prepareSlideshow);
 addLoadEvent(prepareInternalnav);
+addLoadEvent(preparePlaceholder);
+addLoadEvent(prepareGallery);
 
 function addLoadEvent(func) {
     var oldLoad = window.onload;
@@ -86,8 +88,8 @@ function moveElement(elementId, final_x, final_y, interval) {
 }
 // 首页，悬浮链接的时候，动态显示不同的图片
 function prepareSlideshow() {
-	if (!document.getElementById) return false;
-	if (!document.getElementById('intro')) return false
+    if (!document.getElementById) return false;
+    if (!document.getElementById('intro')) return false
 
     var intro = document.getElementById('intro');
     var slideshow = document.createElement('div');
@@ -113,8 +115,8 @@ function prepareSlideshow() {
 }
 // about页面，选中section显示，未选中隐藏
 function showSection(id) {
-	if (!document.getElementById) return false;
-	if (!document.getElementsByTagName) return false;
+    if (!document.getElementById) return false;
+    if (!document.getElementsByTagName) return false;
     if (!document.getElementById('art')) return false;
     if (!document.getElementsByTagName('section')) return false;
     var intro = document.getElementById('art');
@@ -129,8 +131,8 @@ function showSection(id) {
 }
 // about页面，点击链接显示section
 function prepareInternalnav() {
-	if (!document.getElementById) return false;
-	if (!document.getElementsByTagName) return false;
+    if (!document.getElementById) return false;
+    if (!document.getElementsByTagName) return false;
     if (!document.getElementById('art')) return false;
     if (!document.getElementsByTagName('section')) return false;
     var intro = document.getElementById('art');
@@ -142,4 +144,45 @@ function prepareInternalnav() {
             showSection(destion);
         }
     }
+}
+// photos页面，点击缩略图展示图片
+function prepareGallery() {
+    if (!document.getElementById) return false;
+    if (!document.getElementsByTagName) return false;
+    if (!document.getElementById('imagegallery')) return false;
+    if (!document.getElementsByTagName('a')) return false;
+    var gallery = document.getElementById('imagegallery');
+    var links = document.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {
+        links[i].onclick = function() {
+            showPic(this.title, this.href);
+            return false;
+        }
+    }
+}
+// 为图片准备占位
+function preparePlaceholder(title, href) {
+    if (!document.getElementById) return false;
+    if (!document.getElementById('imagegallery')) return false;
+    var gallery = document.getElementById('imagegallery');
+    var placeholder = document.createElement('p');
+    placeholder.id = 'placeholder';
+    placeholder.innerHTML = 'Choose an image';
+    var img = document.createElement('img');
+    img.id = 'img';
+    img.src = 'images/placeholder.gif';
+    img.alt = 'my image gallery';
+    insertAfter(img, gallery);
+    insertAfter(placeholder, gallery);
+}
+// 展示图片
+function showPic(title, href) {
+    if (!document.getElementById) return false;
+    if (!document.getElementById('placeholder')) return false;
+    if (!document.getElementById('img')) return false;
+    var placeholder = document.getElementById('placeholder');
+    placeholder.innerHTML = title;
+    var img = document.getElementById('img');
+    img.src = href;
+    img.alt = href.split('/')[2].split('.jpg')[0];
 }
