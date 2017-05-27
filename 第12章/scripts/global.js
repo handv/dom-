@@ -3,6 +3,8 @@ addLoadEvent(prepareSlideshow);
 addLoadEvent(prepareInternalnav);
 addLoadEvent(preparePlaceholder);
 addLoadEvent(prepareGallery);
+addLoadEvent(stripeTable);
+addLoadEvent(highlightRows);
 
 function addLoadEvent(func) {
     var oldLoad = window.onload;
@@ -29,7 +31,7 @@ function addClass(element, value) {
     if (!element.className) {
         element.className = value;
     } else {
-        newClassName = element.className;
+        var newClassName = element.className;
         newClassName += " ";
         newClassName += value;
         element.className = newClassName;
@@ -152,7 +154,7 @@ function prepareGallery() {
     if (!document.getElementById('imagegallery')) return false;
     if (!document.getElementsByTagName('a')) return false;
     var gallery = document.getElementById('imagegallery');
-    var links = document.getElementsByTagName('a');
+    var links = gallery.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
         links[i].onclick = function() {
             showPic(this.title, this.href);
@@ -185,4 +187,36 @@ function showPic(title, href) {
     var img = document.getElementById('img');
     img.src = href;
     img.alt = href.split('/')[2].split('.jpg')[0];
+}
+
+// live页面，表格颜色斑马纹
+function stripeTable() {
+    if (!document.getElementsByTagName) return false;
+    if (!document.getElementsByTagName('tbody')) return false;
+    if (!document.getElementsByTagName('tr')) return false;
+    var table = document.getElementsByTagName('tbody')[0];
+    var trs = table.getElementsByTagName('tr');
+    for (var i = 0; i < trs.length; i++) {
+        if (i % 2 != 0) {
+            addClass(trs[i], 'odd');
+        }
+    }
+}
+// live页面，鼠标悬浮时显示高亮
+function highlightRows(){
+	if (!document.getElementsByTagName) return false;
+    if (!document.getElementsByTagName('tbody')) return false;
+    if (!document.getElementsByTagName('tr')) return false;
+    var table = document.getElementsByTagName('tbody')[0];
+    var trs = table.getElementsByTagName('tr');
+    for (var i = 0; i < trs.length; i++) {
+    	trs[i].oldClassName = trs[i].className;
+        trs[i].onmouseover = function(){
+        	addClass(this,'highlight');
+        }
+        trs[i].onmouseout = function(){
+        	// 还是这个方法简单有效，比用什么删除class的方法强
+        	this.className = this.oldClassName;
+        }
+    }
 }
